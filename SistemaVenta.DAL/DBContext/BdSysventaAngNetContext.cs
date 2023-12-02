@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using SistemaVenta.Model; //Agregar usiing o referencia para acceder a los modelos min 17.40
 
 namespace SistemaVenta.DAL.DBContext;
 
