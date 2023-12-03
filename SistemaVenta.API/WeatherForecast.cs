@@ -1,5 +1,6 @@
 namespace SistemaVenta.API
 {
+    //Clase que contiene propiedades min 00.43
     public class WeatherForecast
     {
         public DateTime Date { get; set; }

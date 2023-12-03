@@ -5,6 +5,9 @@ namespace SistemaVenta.Model;
 
 public partial class TblUsuario
 {
+
+    //Es una mala practica mostrar todas las propiedades asi como enviar el modelo completo min 02.48
+
     public int IdUsuario { get; set; }
 
     public string? NombreCompleto { get; set; }

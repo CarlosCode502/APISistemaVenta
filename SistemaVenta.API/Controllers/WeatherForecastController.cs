@@ -18,6 +18,7 @@ namespace SistemaVenta.API.Controllers
             _logger = logger;
         }
 
+        //Un método get que devuelve un array de esta clase min 00.30
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
