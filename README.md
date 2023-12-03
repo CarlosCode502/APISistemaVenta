@@ -10,5 +10,5 @@ Angular 14,
 SQLServer,
 Arquitectura en NCapas, 
 Scafolding para la creación de un dbContext de la BD,
-AutoMapper,
+AutoMapper & AutoMapperExtension,
 
