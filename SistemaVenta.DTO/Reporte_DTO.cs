@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SistemaVenta.DTO
 {
-    //min 17.23
+    //min 17.23 part 2
     public class Reporte_DTO
     {
         public string? NumeroDocumento { get; set; }
