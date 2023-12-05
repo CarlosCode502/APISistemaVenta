@@ -171,19 +171,35 @@ namespace SistemaVenta.BLL.Servicios
                 //Total de productos se agrego al último min 01.16.57 parte 5
                 vmdashBoard_DTO.TotalProductos = await TotalProductos();
 
-                //Objeto que crea o inicializa un nuevo listado de ventas semanas
-                List<VentasSemana_DTO> listaVentas = new List<VentasSemana_DTO>();
+                //Objeto que crea o inicializa un nuevo listado de ventas semanas min 01.17.25 parte 5
+                List<VentasSemana_DTO> listaVentaSemana = new List<VentasSemana_DTO>();
 
-                //Recorre cada elemento del diccionario VentaUltyimaSemana min 01.17.40 parte 5
+                //Itera o reccorre cada item del diccionario VentaUltyimaSemana min 01.17.40 parte 5
+                //Cada elemento va a ser del tipo KeyValuePair<stirng, int> <texto, valor> 
+                //in await VentasUltimaSemana
+                foreach (KeyValuePair<string, int> item in await VentasUltimaSemana())
+                {
+                    //Cada iteración se va a ejecutar o se va a actualizar el listado de ventas 
+                    //que corresponde a fecha y total min 01.18.50 parte 5
+                    listaVentaSemana.Add(new VentasSemana_DTO
+                    {
+                        //Propiedades o valores que va a tener
+                        Fecha = item.Key,
+                        Total = item.Value
+                    });                    
+                }
 
-
+                //Al final ya es posible actualizar el módelo ventasUltimaSemana
+                vmdashBoard_DTO.VentasUltimaSemana = listaVentaSemana;
             }
             catch
             {
                 //Devuelve el error
                 throw;
             }
-        }
 
+            //Retornamos el modelo con datos min 01.19.30 parte 5
+            return vmdashBoard_DTO;
+        }
     }
 }
