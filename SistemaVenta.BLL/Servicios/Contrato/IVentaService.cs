@@ -1,11 +1,11 @@
-﻿using SistemaVenta.DTO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 //Agregando referencia min 40.50 parte 5
+using SistemaVenta.DTO;
 
 namespace SistemaVenta.BLL.Servicios.Contrato
 {

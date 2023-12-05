@@ -110,18 +110,37 @@ namespace SistemaVenta.BLL.Servicios
             return _mapper.Map<List<Venta_DTO>>(listaResultado);
         }
 
-        public Task<List<Reporte_DTO>> Reporte(string fechaInicio, string fechaFin)
+        public async Task<List<Reporte_DTO>> Reporte(string fechaInicio, string fechaFin)
         {
+            //Crear un iquerable que obtiene una consulta min 54.36 parte 5
+            IQueryable<TblDetalleVenta> query = await _detalleVentaRepositorio.Consultar();
+
+            //obtenemos un listado de tipo TblDetalleVenta
+            var listaResultado = new List<TblDetalleVenta>();
+
             try
             {
+                //Creamos 2 variables de tipo DT que recibe un parseo con la cultura y formato min 55.10 parte 5
+                DateTime fech_Inicio = DateTime.ParseExact(fechaInicio, "dd/MM/yyyy", new CultureInfo("es-GT"));
+                DateTime fech_Fin = DateTime.ParseExact(fechaFin, "dd/MM/yyyy", new CultureInfo("es-GT"));
 
+                //Obtener todos los listados que cumplan con un rango parte 5
+                listaResultado = await query
+                    .Include(p => p.IdProductoNavigation)
+                    .Include(v => v.IdVentaNavigation)
+                    .Where(dv => 
+                        dv.IdVentaNavigation.FechaRegistro.Value.Date >= fech_Inicio.Date && 
+                        dv.IdVentaNavigation.FechaRegistro.Value.Date <= fech_Fin.Date)
+                    .ToListAsync(); //min 57.00 parte 5
             }
             catch
             {
                 //Devuelve el error
                 throw;
             }
-        }
 
+            //retornamos la var lista resultado pero antes se debe hacer un mapeo (TblDetalleVenta a ReporteDto) min 57.23 p5
+            return _mapper.Map<List<Reporte_DTO>>(listaResultado);
+        }
     }
 }
