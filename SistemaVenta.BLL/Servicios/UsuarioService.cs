@@ -101,24 +101,87 @@ namespace SistemaVenta.BLL.Servicios
                 //Obtenemos al usuario creado a partir del id min 18.02 part 5
                 var query = await _usuarioRepositorio.Consultar(u => u.IdUsuario == usuarioCreado.IdUsuario);
 
-                //Actualizamos el usuario creado 
+                //Actualizamos el usuario creado (el campo rol recordando que irolnav tiene acceso) min 18.35 part 5
+                usuarioCreado = query.Include(rol => rol.IdRolNavigation).First();
+
+                //Necesitamos retornar el usuario creado especificando (el destino y el origen) min 19.00 part 5
+                return _mapper.Map<Usuario_DTO>(usuarioCreado);
 
             }
             catch (Exception)
             {
-
+                //Devuelve el error
                 throw;
             }
         }
 
-        public Task<bool> Editar(Usuario_DTO modeloE)
+        public async Task<bool> Editar(Usuario_DTO modeloE)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //Necesitamos a maper ya que necesitamos acceder al modelo y convertirlo en un usuario pero que
+                //pertenezca a la clase de nuestros modelos min 19.18 parte 5
+                var usuarioModelo = _mapper.Map<TblUsuario>(modeloE);
+
+                //Obtiene una busqueda para saber si ese usuario existe o no en la bd (recibe un filtro) min 20.09 parte 5
+                var usuarioEncontrado = await _usuarioRepositorio.Obtener(u => u.IdUsuario == usuarioModelo.IdUsuario);
+
+                //SI usuario encontrado es = a nulo entonces no existe el usuario min 20.37 parte 5
+                if(usuarioEncontrado == null)
+                {
+                    throw new TaskCanceledException("El usuario no existe.");
+                }
+
+                //SI el usuario si existe se editaran sus propiedades 21.00 p5
+                usuarioEncontrado.NombreCompleto = usuarioModelo.NombreCompleto;
+                usuarioEncontrado.Correo = usuarioModelo.Correo;
+                usuarioEncontrado.IdRol = usuarioModelo.IdRol;
+                usuarioEncontrado.Clave = usuarioModelo.Clave;
+                usuarioEncontrado.EsActivo = usuarioModelo.EsActivo;
+
+                //Obtenemos una respuesta si el usuario fue editado exitosamente (obtiene un true) ? false 21.59 p5
+                bool respuesta = await _usuarioRepositorio.Editar(usuarioEncontrado);
+
+                //Si respuesta es falso va mostrar un error min 22.24 parte 5
+                if(!respuesta)
+                {
+                    throw new TaskCanceledException("No se pudo editar."); 
+                }
+
+                //Si es true se retorna la respuesta min 22.38 parte 4
+                return respuesta;
+            }
+            catch
+            {
+                //Devuelve el error
+                throw;
+            }
         }
 
-        public Task<bool> Eliminar(int id)
+        public async Task<bool> Eliminar(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                //Obtener el usuario pasando un filtro con el id min 22.54 parte 5
+                var usuarioEncontrado = await _usuarioRepositorio.Obtener(u => u.IdUsuario == id);
+
+                //Valida si el usuario existe si no muestra un msj de error min 23.12 parte 5
+                if (usuarioEncontrado == null) { throw new TaskCanceledException("Usuario no encontrado."); }
+
+                //Si existe el usuario va a devolver un true caso contrario fañse min 23.32 parte 5
+                bool respuesta = await _usuarioRepositorio.Eliminar(usuarioEncontrado);
+
+                //Válida si respuesta es false muestra msj de error min 23.49 parte 5
+                if(!respuesta) { throw new TaskCanceledException("No se pudo eliminar el usuario"); }
+
+                //Se retorna la respuesta si es true min 24.05 parte 5
+                return respuesta;
+            }
+            catch
+            {
+                //Devuelve el error
+                throw;
+            }
         }
     }
 }
