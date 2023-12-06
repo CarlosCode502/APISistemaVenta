@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using SistemaVenta.BLL.Servicios.Contrato;
 using SistemaVenta.DTO;
 using SistemaVenta.API.Utilidad; //Aqui se encuentra response (comunicación)
-using SistemaVenta.BLL.Servicios;
 
 namespace SistemaVenta.API.Controllers
 {
@@ -149,7 +148,7 @@ namespace SistemaVenta.API.Controllers
         //Action / API para validar las credenciales del usuario min 12.38 parte 6
         //Devuelve desde el cuerpo un EliminarUsuario
         [HttpDelete] //Se cambio
-        [Route("Eliminar/{id:int}")] //Especificamos la url(y id) durante la ejecucion 
+        [Route("Eliminar/{id:int}")] //Especificamos la url(y id) durante la ejecución 
         public async Task<IActionResult> Eliminar(int id)
         {
             //Va a ser una nueva instancia a la clase response min 12.38 parte 6
