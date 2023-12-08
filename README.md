@@ -14,3 +14,5 @@ AutoMapper & AutoMapperExtension,
 Node JS 20,
 Angular material 17,
 Sweetalert,
+(Lo de angular debe ser las versiones más actuales)
+
