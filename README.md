@@ -11,8 +11,8 @@ SQLServer,
 Arquitectura en NCapas, 
 Scafolding para la creación de un dbContext de la BD,
 AutoMapper & AutoMapperExtension,
-Node JS 20,
-Angular material 17,
+Angular CLI: 16.2.10
+Node: 16.20.2
 Sweetalert,
 (Lo de angular debe ser las versiones más actuales)
 
