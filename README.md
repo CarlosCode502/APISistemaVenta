@@ -19,3 +19,6 @@ Moment^2.29.4 (Formatos de fecha),
 material-moment-adapter@16.2.10 (Debe ser igual a la version de angular material), 
 chart.js^4.4.1 (para usar los graficos),
 xlsx 0.18.5 (para generar reportes en exel).
+
+Utilizando: 
+Html,
