@@ -23,4 +23,4 @@ xlsx 0.18.5 (para generar reportes en exel).
 Utilizando: 
 Html,
 Css,
-Componentes de angular
+Componentes de angular.
