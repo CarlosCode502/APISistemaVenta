@@ -25,7 +25,7 @@ namespace SistemaVenta.API.Controllers
         /// <summary>
         /// Contiene la lógica para poder registrar una Venta min 19.08 parte 6
         /// </summary>
-        /// <param name="productoC">Recibe el modelo venta.</param>
+        /// <param name="ventaR">Recibe el modelo venta.</param>
         /// <returns>Respuesta exitosa/noexitosa.</returns>
         [HttpPost]
         [Route("Registrar")]

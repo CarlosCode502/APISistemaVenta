@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-//Agregar referencias min 23.22 part 4
+//Agregar referencias min 23.22 parte 4
 using AutoMapper;
 using SistemaVenta.DTO; //Clases recientes
 using SistemaVenta.Model; //Modelos de la BD
@@ -72,7 +72,7 @@ namespace SistemaVenta.Utility
             #endregion Categoria
 
             #region Productos
-            //Mapeo de Productos 34.20
+            //Mapeo de Productos 34.20 parte 4
             CreateMap<TblProducto, Producto_DTO>()
                 //Obtiene el campo Descripcion del destino (campo creado) y le asigna el valor del campo origen Nombre
                 .ForMember(destino => destino.DescripcionCategoria,

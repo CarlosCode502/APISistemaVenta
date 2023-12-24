@@ -28,7 +28,7 @@ namespace SistemaVenta.API.Controllers
         /// <returns>Respuesta exitosa/noexitosa.</returns>
         [HttpGet]
         [Route("Lista")]
-        public async Task<IActionResult> Lista(int Usuario)
+        public async Task<IActionResult> Lista(int idUsuario)
         {
             //Va a validar si se recibe una lista de dto min 26.30 parte 6
             var rsp = new Response<List<Menu_DTO>>();
@@ -39,7 +39,7 @@ namespace SistemaVenta.API.Controllers
                 rsp.Status = true;
 
                 //Obtiene el valor del método accediendo al servicio min 26.51 parte 6
-                rsp.Value = await _menuService.ListaMenu(Usuario);
+                rsp.Value = await _menuService.ListaMenu(idUsuario);
 
             }
             catch (Exception ex) //Si se ocupara el exception

@@ -12,13 +12,18 @@ namespace SistemaVenta.API.Controllers
     [ApiController]
     public class ProductoController : ControllerBase
     {
+        //Se agrego iLoger para msj de log (extra ya teninedo parte 11 terminado bug de precio string)
+        private readonly ILogger logger;
+
         //Variable privada de solo lectura que contiene una def para esta interfaz min 15.25 parte 6
         private readonly IProductoService _productoService;
 
         //Inyecta el servicio a la clase (para evitar asi tener que crear una nueva instancia) cada vez que 
         //se dese utilizar o sea declarada
-        public ProductoController(IProductoService productoService)
+        //Se agrego iLoger para msj de log (extra ya teninedo parte 11 terminado bug de precio string)
+        public ProductoController(ILogger<ProductoController> logger,IProductoService productoService)
         {
+            this.logger = logger;
             _productoService = productoService;
         }
 
@@ -63,7 +68,7 @@ namespace SistemaVenta.API.Controllers
         /// <returns>Respuesta exitosa/noexitosa.</returns>
         [HttpPost]
         [Route("Guardar")]
-        public async Task<IActionResult> Guardar([FromBody] Producto_DTO productoC)
+        public async Task<IActionResult> Guardar([FromBody] Producto_DTO? productoC)
         {
             //Va a ser una nueva instancia a la clase response min 16.50 parte 6
             var rsp = new Response<Producto_DTO>(); //Error aqui no debi devolver un listado
@@ -74,7 +79,7 @@ namespace SistemaVenta.API.Controllers
                 rsp.Status = true;
 
                 //Obtiene el valor de la ejecución del método al acceder al servicio min 16.50 parte 6
-                rsp.Value = await _productoService.Crear(productoC);
+                rsp.Value = await _productoService.Crear(productoC!);
 
             }
             catch (Exception ex) //Si se ocupara el exception
@@ -82,6 +87,9 @@ namespace SistemaVenta.API.Controllers
                 //Devuelve el error min
                 rsp.Status = false;
                 rsp.Msg = ex.Message;
+                //Se agrego iLoger para msj de log (extra ya teninedo parte 11 terminado bug de precio string)
+                string message = $"Error de envio, los detalles son los siguientes:{ex.Message}";
+                logger.LogError(message);
             }
 
             //Retornar la respuesta de forma positiva min 16.50 parte 6

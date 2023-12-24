@@ -15,7 +15,7 @@ namespace SistemaVenta.DTO
 
         public int? IdCategoria { get; set; }
 
-        //Se agrgó un nuevo campo
+        //Se agregó un nuevo campo
         public string? DescripcionCategoria { get; set; }
 
         public int? Stock { get; set; }
@@ -25,5 +25,8 @@ namespace SistemaVenta.DTO
 
         //Se modifico de bool a int
         public int? EsActivo { get; set; }
+
+        //Se agrego el campo nota (teniendo finalizado parte 11)
+        //public string? Nota { get; set; }
     }
 }

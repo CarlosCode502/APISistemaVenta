@@ -24,7 +24,7 @@ namespace SistemaVenta.API.Controllers
         }
 
         //Único método que va a tener este controlador min 14.29 parte 6
-        [HttpGet]
+        [HttpGet] 
         [Route("Lista")] //Mismo nombre que el action
         public async Task<IActionResult> Lista()
         {

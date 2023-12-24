@@ -37,6 +37,7 @@ if (app.Environment.IsDevelopment())
 
 //Activar toda la configuracion de Cors (del min 29.10 parte 6) min 31.53 parte 6
 //Con esto se activan los cors (agregar el nombre de la politica) para cualquier url
+//Todo forma una API Rest
 app.UseCors("NuevaPolitica");
 
 app.UseAuthorization();
