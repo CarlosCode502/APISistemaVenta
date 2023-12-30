@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-//Agregando referencias min 19.18 
+//Agregando referencias min 19.18 parte 3
 using SistemaVenta.DAL.DBContext;
 using SistemaVenta.DAL.Repositorios.Contratos;
 using SistemaVenta.Model;
@@ -31,7 +31,7 @@ namespace SistemaVenta.DAL.Repositorios
 
             //Creamos una transacción que va ha ser que cuando exista algun error al momento de hacer un insert
             //Se restablescan los registros guardados que esten relacionados con esta transacción
-            //Empezamos a declarar la transacción min 22.50
+            //Empezamos a declarar la transacción min 22.50 parte 3
             using (var transaction = _dbContext.Database.BeginTransaction())
             {
                 //Implementamos la lógica (Si surge un error se restblece todo al principio de hacer el registro)
@@ -48,14 +48,14 @@ namespace SistemaVenta.DAL.Repositorios
                         //Vamos a restar el stock = a menos la cantidad del producto que viene de dv
                         producto_Encontrado.Stock = producto_Encontrado?.Stock - dv.Cantidad;
 
-                        //Accedemos a la bd para actualizar el stock del producto encontrado min 25.20
+                        //Accedemos a la bd para actualizar el stock del producto encontrado min 25.20 parte 3
                         _dbContext.TblProductos.Update(producto_Encontrado);
                     }
 
                     //Va a accedet a la bd y guardar los cambios de manera async
                     await _dbContext.SaveChangesAsync();
 
-                    //Luego de eso se va a crear un nuevo número de documento que devuelva el primero que es 0 min 26.18
+                    //Luego de eso se va a crear un nuevo número de documento que devuelva el primero que es 0 min 26.18 parte 3
                     TblNumeroDocumento correlativo = _dbContext.TblNumeroDocumentos.First();
 
                     //UltimoNumero sera donde guardaremos el ultimo + 1
@@ -68,13 +68,16 @@ namespace SistemaVenta.DAL.Repositorios
                     //Guardamos los cambios min 27.20 part 3
                     await _dbContext.SaveChangesAsync();
 
-                    //Generar el formato del numero de doc venta  0001 min 27.40
+                    //Generar el formato del numero de doc venta  0001 min 27.40 parte 3
                     int cantidadDigitos = 4;
                     //Especificar la cantidad de 0 que va a contener se usa un método de repeticion 
+                    //Los 0 se va a repetir el valor de cantidadDigitos
                     string ceros = string.Concat(Enumerable.Repeat("0", cantidadDigitos)); //El 0 se rep * cantDig = 0000 
 
-                    //Crear numerodeVenta va a estar conformado por el numero de 0 que han especificado min 28.50
-                    string numeroDeVenta = ceros + cantidadDigitos.ToString(); //= 0001
+                    //Crear numerodeVenta va a estar conformado por el numero de 0 que han especificado min 28.50 parte 3
+                    //string numeroDeVenta = ceros + cantidadDigitos.ToString(); //= 0001
+                    //Es correcto se le pasa el correlativo (había escrito lo de arriba y es incorrecto)
+                    string numeroDeVenta = ceros + correlativo.UltimoNumero.ToString();
 
                     //Obtener el numero de venta 4 ceros + 1 dig = 00001 (Debe ser 0001)
                     //Inicia en el la cantidad y le resta 4 luego pasamos la cantidad de digitos que va a obtener

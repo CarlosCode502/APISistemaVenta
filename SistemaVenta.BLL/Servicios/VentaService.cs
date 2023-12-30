@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 //Agregar referencias min 43.20 part5
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SistemaVenta.BLL.Servicios.Contrato;
 using SistemaVenta.DAL.Repositorios.Contratos;
 using SistemaVenta.DTO;
@@ -89,10 +90,28 @@ namespace SistemaVenta.BLL.Servicios
                     .ThenInclude(p => p.IdProductoNavigation) //ThenInclude(añadir los productos por cada detalleventa)
                     .ToListAsync(); //Obtenemos un listado asyncrono min 52.41 parte 5
                 }
+                //else /*if (buscarPor == "numero")*/
+                //{
+                //    //if (buscarPor == "" || buscarPor.IsNullOrEmpty())
+                //    //{
+                //    //    buscarPor = "0";
+                //    //}
+
+                //    string numeroObtenido = numeroVenta;
+                //    //Va a ser búsqueda por NumeroDeDocumento min 53.27 parte 4
+                //    //Entonces listaResultado espera una consulta cuando el NumeroDoc sea igual al numeroVenta
+                //    listaResultado = await query.Where(v => v.NumeroDocumento == numeroObtenido)
+                //        .Include(dv => dv.TblDetalleVenta)
+                //        .ThenInclude(p => p.IdProductoNavigation)
+                //        .ToListAsync();
+                //}
+
+                //SIN MODIFICAR
                 else
                 {
                     //Va a ser búsqueda por NumeroDeDocumento min 53.27 parte 4
                     //Entonces listaResultado espera una consulta cuando el NumeroDoc sea igual al numeroVenta
+                    //Por cada detalle de venta tambien su producto
                     listaResultado = await query.Where(v => v.NumeroDocumento == numeroVenta)
                         .Include(dv => dv.TblDetalleVenta)
                         .ThenInclude(p => p.IdProductoNavigation)
