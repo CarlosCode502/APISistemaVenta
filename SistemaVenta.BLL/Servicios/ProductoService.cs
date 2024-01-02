@@ -130,10 +130,11 @@ namespace SistemaVenta.BLL.Servicios
                 //Si se encuentra retornamos la respuesta min 39.55 parte 5
                 return respuesta;
             }
-            catch
+            catch /*(Exception ex) { }*/
             {
                 //Devuelve el error
                 throw;
+                //await Console.Out.WriteLineAsync(Exception.Refe);
             }
         }
     }
