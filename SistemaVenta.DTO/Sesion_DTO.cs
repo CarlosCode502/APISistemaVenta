@@ -19,5 +19,8 @@ namespace SistemaVenta.DTO
 
         //Se agrego para agregar el rol de la descripción
         public string? RolDescripcion { get; set; }
+
+        //#-- Se cambió el tipo de dato de bool a int
+        public int? EsActivo { get; set; }
     }
 }

@@ -52,6 +52,10 @@ namespace SistemaVenta.Utility
             .ForMember(destino => destino.RolDescripcion, //Campo destino (nuevo)
             opts => opts.MapFrom(origen => origen.IdRolNavigation.Nombre) //Campo de origen (eviar valor a nuevo)
             );
+            //Obtener un bool y retornar un entero
+            //.ForMember(destino => destino.EsActivo, //Activo en el origen es bool y en el destino es int 
+            //opts => opts.MapFrom(origen => origen.EsActivo == true ? 1 : 0)
+            //); //Si origen.EsActivo es = true entonces devolver un 1 en caso de ser false devolver
 
 
             //Convertir Usuario_DTO a TblUsuario (Contrario)
