@@ -110,9 +110,31 @@ namespace SistemaVenta.BLL.Servicios
         //Método para obtener el total de productos min 01.08.35 parte 5
         private async Task<int> TotalProductos()
         {
+            ////#-- Contendrá el total de productos
+            //int total = 0;
+
             //Obtener todos los productos (Query o consulta)
             IQueryable<TblProducto> _productoQuery = await _productoRepositorio.Consultar();
 
+            ////#-- Agregado para obtener los productos vendidos de la útlima semana
+            ////#-- Obtener el total de productos min 01.09.17 parte 5
+            //if (_productoQuery.Count() > 0)
+            //{
+            //    //Ejecutamos el método ejecutar ventas (min 01.00.00 parte 5) creado arriba
+            //    //Que recibe un query y un entero(que es el diarestar en este caso una semana -7 dias) min 01.05.00 parte 5
+            //    var tablaVenta = RetornarVentas(_productoQuery, -7);
+
+            //    //Obtenemos el total de ventas que han sido registradas hace 7 dias
+            //    total = tablaVenta.Count(); ;
+            //}
+
+
+
+
+            ////#-- Retornamos el total de productos min 01.09.30 parte 5
+            //return total;
+
+            //#--SIN MODIFICAR
             //Obtener el total de productos min 01.09.17 parte 5
             int total = _productoQuery.Count();
 
