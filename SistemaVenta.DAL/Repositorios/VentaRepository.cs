@@ -48,6 +48,25 @@ namespace SistemaVenta.DAL.Repositorios
                         //Vamos a restar el stock = a menos la cantidad del producto que viene de dv
                         producto_Encontrado.Stock = producto_Encontrado?.Stock - dv.Cantidad;
 
+                        //#--Obtiene el stock del producto para vender 12/01/2024 15.55pm
+                        var stockEncontrado = producto_Encontrado.Stock;
+
+                        //var cambiarEstado = producto_Encontrado.EsActivo;
+
+                        //#--Actualizar el producto si el stock es <= 0 12/01/2024 15.55pm
+                        //#--Si el stock es menor o igual a cero
+                        if (stockEncontrado <= 0)
+                        {
+                            //El estado pasa a ser falso
+                            producto_Encontrado.EsActivo = false;
+                        }
+                        else
+                        {
+                            //Pasa a ser verdadero
+                            producto_Encontrado.EsActivo = true;
+                        }
+
+
                         //Accedemos a la bd para actualizar el stock del producto encontrado min 25.20 parte 3
                         _dbContext.TblProductos.Update(producto_Encontrado);
                     }

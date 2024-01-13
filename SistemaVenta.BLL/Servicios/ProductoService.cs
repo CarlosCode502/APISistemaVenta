@@ -23,11 +23,15 @@ namespace SistemaVenta.BLL.Servicios
         //Contiene la definicion para trabajar con Mapper min 30.05 parte 5
         private readonly IMapper _mapper;
 
+        //#-- Def para detalleventa
+        private readonly IGenericRepository<TblDetalleVenta> _detalleVentaRepositorio;
+
         //Se genero en acciones rápidas (Teniendo seleccionado lo de arriba) min 30.15 part 5
-        public ProductoService(IGenericRepository<TblProducto> productoRepositorio, IMapper mapper)
+        public ProductoService(IGenericRepository<TblProducto> productoRepositorio, IMapper mapper, IGenericRepository<TblDetalleVenta> detalleVentaRepositorio)
         {
             _productoRepositorio = productoRepositorio;
             _mapper = mapper;
+            _detalleVentaRepositorio = detalleVentaRepositorio;
         }
 
 
@@ -40,6 +44,24 @@ namespace SistemaVenta.BLL.Servicios
 
                 //Listado de productos (con un filtro al que tenemos acceso a las prop de categorias) min 31.10 parte 5
                 var listaProductos = queryProducto.Include(cat => cat.IdCategoriaNavigation).ToList();
+
+                //#-- Valida si el stock del producto es <= 0
+                //for (int i = 0; i < listaProductos.Count; i++)
+                //{
+                //    var element = listaProductos[i];
+
+                //    if(element.Stock <= 0)
+                //    {
+                //        element.EsActivo = false;
+                //    }
+                //    else
+                //    {
+                //        element.EsActivo = true;
+                //    }
+
+                //    listaProductos[i] = element;
+                //}
+
 
                 //Retorna un mapeo del listado especificando (destino, origen) min 31.15 parte 5
                 return _mapper.Map<List<Producto_DTO>>(listaProductos.ToList());
@@ -55,6 +77,17 @@ namespace SistemaVenta.BLL.Servicios
         {
             try
             {
+                //#-- Si el stock es mayor o igual a 1 el estado sera activo sino inactivo 12/01/24 16.25
+                if (modeloC.Stock <= 0)
+                {
+                    modeloC.EsActivo = 0;
+                }
+                else
+                {
+                    modeloC.EsActivo = 1;
+                }
+
+
                 //min 32.45 parte 5
 
                 //Recibe un producto no un modelo para eso se debe mapear como modelo para obtener un producto
@@ -64,6 +97,9 @@ namespace SistemaVenta.BLL.Servicios
                 //Valida si el del producto es 0 quiere decir que no se pudo crear min 33.25 parte 5
                 //Retornar tarea cancelada
                 if (productoCreado.IdProducto == 0) { throw new TaskCanceledException("No se pudo crear el producto"); }
+
+
+
 
                 //Si se creó devolvemos el producto min 33.59 parte 5
                 return _mapper.Map<Producto_DTO>(productoCreado);
@@ -93,7 +129,18 @@ namespace SistemaVenta.BLL.Servicios
                 productoEncontrado.IdCategoria = productoModelo.IdCategoria;
                 productoEncontrado.Stock = productoModelo.Stock;
                 productoEncontrado.Precio = productoModelo.Precio;
-                productoEncontrado.EsActivo = productoModelo.EsActivo;
+                //productoEncontrado.EsActivo = productoModelo.EsActivo;
+
+                //#-- Si el stock es mayor o igual a 1 el estado sera activo sino inactivo 12/01/24 16.25
+                if (productoEncontrado.Stock >= 1)
+                {
+                    productoEncontrado.EsActivo = true;
+                }
+                else
+                {
+                    productoEncontrado.EsActivo = false;
+                }
+                
 
                 //Ejecutamos el método editar si todo es correcto devuelve true min 37.45 parte 5
                 bool respuesta = await _productoRepositorio.Editar(productoEncontrado);
@@ -117,9 +164,10 @@ namespace SistemaVenta.BLL.Servicios
             {
                 //Obtiene el producto que cumpla con un filtro de id min 38.26 parte 5
                 var productoEncontrado = await _productoRepositorio.Obtener(p => p.IdProducto == id);
+                //var productoDetalle = await _detalleVentaRepositorio.Obtener(p => p.IdProducto == id)
 
                 //Valida si existe el producto encontrado (si no se interrumpe) min 38.45 parte 5
-                if(productoEncontrado == null) { throw new TaskCanceledException("El producto no existe."); }
+                if (productoEncontrado == null) { throw new TaskCanceledException("El producto no existe."); }
 
                 //Si el producto es encontrado se ejecuta el método eliminar min 39.19 parte 5
                 bool respuesta = await _productoRepositorio.Eliminar(productoEncontrado);
