@@ -34,7 +34,6 @@ namespace SistemaVenta.BLL.Servicios
             _detalleVentaRepositorio = detalleVentaRepositorio;
         }
 
-
         public async Task<List<Producto_DTO>> ListaProductos()
         {
             try
@@ -87,9 +86,7 @@ namespace SistemaVenta.BLL.Servicios
                     modeloC.EsActivo = 1;
                 }
 
-
                 //min 32.45 parte 5
-
                 //Recibe un producto no un modelo para eso se debe mapear como modelo para obtener un producto
                 //Se especifica modelo y producto min 33.08 parte 5
                 var productoCreado = await _productoRepositorio.Crear(_mapper.Map<TblProducto>(modeloC));
@@ -97,9 +94,6 @@ namespace SistemaVenta.BLL.Servicios
                 //Valida si el del producto es 0 quiere decir que no se pudo crear min 33.25 parte 5
                 //Retornar tarea cancelada
                 if (productoCreado.IdProducto == 0) { throw new TaskCanceledException("No se pudo crear el producto"); }
-
-
-
 
                 //Si se creó devolvemos el producto min 33.59 parte 5
                 return _mapper.Map<Producto_DTO>(productoCreado);
@@ -139,8 +133,7 @@ namespace SistemaVenta.BLL.Servicios
                 else
                 {
                     productoEncontrado.EsActivo = false;
-                }
-                
+                }                
 
                 //Ejecutamos el método editar si todo es correcto devuelve true min 37.45 parte 5
                 bool respuesta = await _productoRepositorio.Editar(productoEncontrado);

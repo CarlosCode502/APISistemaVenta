@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 //Agregar referencias min 58.46 part5
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using SistemaVenta.BLL.Servicios.Contrato;
 using SistemaVenta.DAL.Repositorios.Contratos;
 using SistemaVenta.DTO;
@@ -25,16 +24,21 @@ namespace SistemaVenta.BLL.Servicios
         //Contiene una def para Mapper
         private readonly IMapper _mapper;
 
+        //#-- Agregado para poder obtener el total de productos vendidos 16/01/2024 13.21pm
+        private readonly IGenericRepository<TblDetalleVenta> _detalleVentaRepositorio;
+
         //Generado automáticamente (teniendo seleccionado las definiciones anteriores) min 59.46 parte 5
-        public DashBoardService(IVentaRepository ventaRepositorio, IGenericRepository<TblProducto> productoRepositorio, IMapper mapper)
+        public DashBoardService(IVentaRepository ventaRepositorio, IGenericRepository<TblProducto> productoRepositorio, IMapper mapper, IGenericRepository<TblDetalleVenta> detalleVentaRepositorio)
         {
             _ventaRepositorio = ventaRepositorio;
             _productoRepositorio = productoRepositorio;
             _mapper = mapper;
+            //#-- Agregado para poder obtener el total de productos vendidos 16/01/2024 13.21pm
+            _detalleVentaRepositorio = detalleVentaRepositorio;
         }
 
-
         //Serie de métodos que nos permitirán obtener el resumen min 01.00.00 parte 5
+
         //private ya que solo debe tener acceso esta clase (Retorna una tabla de ventas)
         //restarCantidadDias (Para devolver todo un rango de ventas según una fecha eje fechahoy - 9dias ) min 01.01.30
         //Los dias que se van an restar van a ser los registros que se van a tomar para mostrar
@@ -53,6 +57,31 @@ namespace SistemaVenta.BLL.Servicios
             return tablaVentas.Where(v => v.FechaRegistro.Value.Date >= ultimaFecha.Value.Date);
         }
 
+        //#-- Método que permite retornar los productos vendidos en la semana 16/01/2024 13.28 pm
+        //#-- Recibe como parametros consulatas de tipo(TblVenta, TblDetalleVenta) y un entero con la cantidad de dias -
+        private IQueryable<TblDetalleVenta> RetornarProd(IQueryable<TblVenta> tablaVentas, IQueryable<TblDetalleVenta> tblDetalleVentas, int restarCantidadDias)
+        {
+            //Obtener la última fecha registrada en la tabla min 01.02.10 parte 5
+            //#-- 16/01/2024 13.28 pm
+            //#-- Recibe un filtro para devolver las fechas oredenadas de forma desendente de mayor a menor (dev el primero encont)
+            DateTime? ultimaFecha = tablaVentas.OrderByDescending(v => v.FechaRegistro).Select(v => v.FechaRegistro).First();
+
+            //A la útlima fecha le restamos dias especificos min 01.02.35 parte 5
+            //Se obtiene la últimafecha y se le restan dias para obtener las demás fechas
+            ultimaFecha = ultimaFecha.Value.AddDays(restarCantidadDias);
+
+            //Devulve la tabla de venta aplicando el filtro min 01.03.07 parte 5
+            //A la última fecha  que se ha modificado 
+            //return tablaVentas.Where(v => v.FechaRegistro.Value.Date >= ultimaFecha.Value.Date);
+            //#-- Obtiene las ventas que sean mayores a los ultimos 7 dias y selecciona el id de la venta 16/01/2024 13.36 pm
+            var obtenrVentas = tablaVentas.Where(v => v.FechaRegistro.Value.Date >= ultimaFecha.Value.Date).Select(p => p.IdVenta).First(); //Obtiene el primer elemento de la última venta
+
+            //obtenrVentas = obtenrVentas.Select(vId => vId.IdVenta).Where()
+
+            //#-- Se retornan el id de las ventas >= al id de la última venta entre el rango de fechas 16/01/2024 13.43 pm
+            return tblDetalleVentas.Where(v => v.IdVenta >= obtenrVentas);
+        }
+
 
         //Método que devuelve un entero con el número de ventas de la última semana min 01.03.45 parte 5
         //De la última semana es decir (-7 dias)
@@ -69,10 +98,10 @@ namespace SistemaVenta.BLL.Servicios
             {
                 //Ejecutamos el método ejecutar ventas (min 01.00.00 parte 5) creado arriba
                 //Que recibe un query y un entero(que es el diarestar en este caso una semana -7 dias) min 01.05.00 parte 5
-                var tablaVenta = RetornarVentas(_ventaQuery, -7);
+                var tablaVenta = RetornarVentas(_ventaQuery, -8);
 
                 //Obtenemos el total de ventas que han sido registradas hace 7 dias
-                total = tablaVenta.Count(); ;
+                total = tablaVenta.Count();
             }
 
             //Finalmente retornamos el total (que es lo que devuelve este metodo) min 01.05.15 parte 5
@@ -96,7 +125,7 @@ namespace SistemaVenta.BLL.Servicios
             {
                 //Obtenemos la tabla de ventas donde retornamos las ventas de la útlima semana
                 //Usamos el método retornarventas de la última semana
-                var tablaVenta = RetornarVentas(_ventaQuery, -7);
+                var tablaVenta = RetornarVentas(_ventaQuery, -8);
 
                 //Actualizar / aumentar la var resultado con la cantidad de totalingresos
                 //Va a obtener todos los totales y va a obtener la suma de los valores
@@ -110,36 +139,63 @@ namespace SistemaVenta.BLL.Servicios
         //Método para obtener el total de productos min 01.08.35 parte 5
         private async Task<int> TotalProductos()
         {
-            ////#-- Contendrá el total de productos
-            //int total = 0;
+            //#-- Quitar comentario 1 vez para dejarlo como al inicio 16/01/2024 13.08 pm
 
-            //Obtener todos los productos (Query o consulta)
-            IQueryable<TblProducto> _productoQuery = await _productoRepositorio.Consultar();
+            //////#-- Contendrá el total de productos
+            ////int total = 0;
 
-            ////#-- Agregado para obtener los productos vendidos de la útlima semana
-            ////#-- Obtener el total de productos min 01.09.17 parte 5
-            //if (_productoQuery.Count() > 0)
-            //{
-            //    //Ejecutamos el método ejecutar ventas (min 01.00.00 parte 5) creado arriba
-            //    //Que recibe un query y un entero(que es el diarestar en este caso una semana -7 dias) min 01.05.00 parte 5
-            //    var tablaVenta = RetornarVentas(_productoQuery, -7);
+            ////Obtener todos los productos (Query o consulta)
+            //IQueryable<TblProducto> _productoQuery = await _productoRepositorio.Consultar();
 
-            //    //Obtenemos el total de ventas que han sido registradas hace 7 dias
-            //    total = tablaVenta.Count(); ;
-            //}
+            //////#-- Agregado para obtener los productos vendidos de la útlima semana
+            //////#-- Obtener el total de productos min 01.09.17 parte 5
+            ////if (_productoQuery.Count() > 0)
+            ////{
+            ////    //Ejecutamos el método ejecutar ventas (min 01.00.00 parte 5) creado arriba
+            ////    //Que recibe un query y un entero(que es el diarestar en este caso una semana -7 dias) min 01.05.00 parte 5
+            ////    var tablaVenta = RetornarVentas(_productoQuery, -7);
 
+            ////    //Obtenemos el total de ventas que han sido registradas hace 7 dias
+            ////    total = tablaVenta.Count(); ;
+            ////}
+            ///
+            //////#-- Retornamos el total de productos min 01.09.30 parte 5
+            ////return total;
 
+            ////#--SIN MODIFICAR
+            ////Obtener el total de productos min 01.09.17 parte 5
+            //int total = _productoQuery.Count();
 
-
-            ////#-- Retornamos el total de productos min 01.09.30 parte 5
+            ////Retornamos el total de productos min 01.09.30 parte 5
             //return total;
 
-            //#--SIN MODIFICAR
-            //Obtener el total de productos min 01.09.17 parte 5
-            int total = _productoQuery.Count();
 
-            //Retornamos el total de productos min 01.09.30 parte 5
-            return total;
+            //#-- Para obtener el total de productos vendidos 16/01/ 2024 13.08 pm
+            //#-- Contendrá el total de productos vendidos 
+            int totalProdVendidos = 0;
+
+            //#-- Obtiene todos los registros de la tabla venta 16/01/2024 
+            IQueryable<TblVenta> _ventaQuery = await _ventaRepositorio.Consultar();
+            //#-- Obtiene todos los registros de detalleventa
+            IQueryable<TblDetalleVenta> _detalleventaQuery = await _detalleVentaRepositorio.Consultar();
+
+            //Valida si existen ventas
+            if (_ventaQuery.Count() > 0)
+            {
+                //Obtenemos la tabla de ventas donde retornamos las ventas de la útlima semana
+                //Usamos el método retornarventas de la última semana
+                //var tablaVenta = _ventaQuery.Where(v => v.IdVenta > 61).Count();
+                //#-- Obtiene el total de detalleventas pasando como parametros todas (las ventas, detallesventas, ultimos 7 dias)
+                var tablaVenta = RetornarProd(_ventaQuery,_detalleventaQuery,  -8);
+
+                
+                //#-- Se obtiene la cantidad de productos vendidos de los últimos 7 dias
+                totalProdVendidos = tablaVenta.Count();
+            }
+
+            //Retornamos el resultado (necesita conversion de string a decimal) min 01.08.03 parte 5
+            //#-- Retorna los productos vendidos 16/01/2024 13.50 pm aprox
+            return totalProdVendidos;
         }
 
 
@@ -158,7 +214,7 @@ namespace SistemaVenta.BLL.Servicios
                 //Se ejecutan las sig intrucciones
 
                 //Obtenemos las ventas de la útlima semana con el método anteriormente creado
-                var tablaVenta = RetornarVentas(_ventaQuery, -7);
+                var tablaVenta = RetornarVentas(_ventaQuery, -8);
 
                 //Se obtendrá el resultado de la tabla venta y agrupara aplicando un filtro min 01.11.34 parte 5
                 //Agrupar por fecha de registro y se ordenara por esa misma columna
