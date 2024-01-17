@@ -39,6 +39,23 @@ namespace SistemaVenta.BLL.Servicios
 
         //Serie de métodos que nos permitirán obtener el resumen min 01.00.00 parte 5
 
+        //#-- Método para obtener el día actual de la semana 16/01/2024 18.03
+        private int obtenerNumeroDeSemana()
+        {
+            
+            int diaSemana = (int)DateTime.Now.DayOfWeek;
+
+            //#-- Para obtener el dia de la semana
+            //foreach(var diaDeSemana in Enum.GetValues(typeof(DayOfWeek))){
+            //    obtenerDiaSemana = (int)diaDeSemana * -1;
+            //}
+
+            int obtenerDiaSemana = diaSemana*-1;
+
+            return obtenerDiaSemana;
+        }
+
+
         //private ya que solo debe tener acceso esta clase (Retorna una tabla de ventas)
         //restarCantidadDias (Para devolver todo un rango de ventas según una fecha eje fechahoy - 9dias ) min 01.01.30
         //Los dias que se van an restar van a ser los registros que se van a tomar para mostrar
@@ -98,7 +115,7 @@ namespace SistemaVenta.BLL.Servicios
             {
                 //Ejecutamos el método ejecutar ventas (min 01.00.00 parte 5) creado arriba
                 //Que recibe un query y un entero(que es el diarestar en este caso una semana -7 dias) min 01.05.00 parte 5
-                var tablaVenta = RetornarVentas(_ventaQuery, -8);
+                var tablaVenta = RetornarVentas(_ventaQuery, obtenerNumeroDeSemana());
 
                 //Obtenemos el total de ventas que han sido registradas hace 7 dias
                 total = tablaVenta.Count();
@@ -125,7 +142,7 @@ namespace SistemaVenta.BLL.Servicios
             {
                 //Obtenemos la tabla de ventas donde retornamos las ventas de la útlima semana
                 //Usamos el método retornarventas de la última semana
-                var tablaVenta = RetornarVentas(_ventaQuery, -8);
+                var tablaVenta = RetornarVentas(_ventaQuery, obtenerNumeroDeSemana());
 
                 //Actualizar / aumentar la var resultado con la cantidad de totalingresos
                 //Va a obtener todos los totales y va a obtener la suma de los valores
@@ -186,7 +203,7 @@ namespace SistemaVenta.BLL.Servicios
                 //Usamos el método retornarventas de la última semana
                 //var tablaVenta = _ventaQuery.Where(v => v.IdVenta > 61).Count();
                 //#-- Obtiene el total de detalleventas pasando como parametros todas (las ventas, detallesventas, ultimos 7 dias)
-                var tablaVenta = RetornarProd(_ventaQuery,_detalleventaQuery,  -8);
+                var tablaVenta = RetornarProd(_ventaQuery,_detalleventaQuery, obtenerNumeroDeSemana());
 
                 
                 //#-- Se obtiene la cantidad de productos vendidos de los últimos 7 dias
@@ -214,7 +231,7 @@ namespace SistemaVenta.BLL.Servicios
                 //Se ejecutan las sig intrucciones
 
                 //Obtenemos las ventas de la útlima semana con el método anteriormente creado
-                var tablaVenta = RetornarVentas(_ventaQuery, -8);
+                var tablaVenta = RetornarVentas(_ventaQuery, obtenerNumeroDeSemana());
 
                 //Se obtendrá el resultado de la tabla venta y agrupara aplicando un filtro min 01.11.34 parte 5
                 //Agrupar por fecha de registro y se ordenara por esa misma columna
