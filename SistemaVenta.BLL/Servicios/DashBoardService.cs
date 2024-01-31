@@ -42,7 +42,7 @@ namespace SistemaVenta.BLL.Servicios
         //#-- Método para obtener el día actual de la semana 16/01/2024 18.03
         private int obtenerNumeroDeSemana()
         {
-            
+            //Obtiene el día de la semana actual
             int diaSemana = (int)DateTime.Now.DayOfWeek;
 
             //#-- Para obtener el dia de la semana
@@ -50,8 +50,10 @@ namespace SistemaVenta.BLL.Servicios
             //    obtenerDiaSemana = (int)diaDeSemana * -1;
             //}
 
+            //Obtiene el dia de la semana (se hace una op para obtenerlo positivo)
             int obtenerDiaSemana = diaSemana*-1;
 
+            //Se retorna el dia
             return obtenerDiaSemana;
         }
 
