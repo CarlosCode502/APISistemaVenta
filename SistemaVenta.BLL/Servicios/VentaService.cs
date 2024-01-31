@@ -28,7 +28,6 @@ namespace SistemaVenta.BLL.Servicios
         //Contiene una definicion para mapper 44.20 parte 5
         private readonly IMapper _mapper;
 
-        static int[] myArray = { 13, 2, 4, 35, 1 };
 
         //Se genero automaticamente en acciones rápidas (teniendo seleccionado lo de arriba) min 44.51 parte 5
         public VentaService(IVentaRepository ventaRepositorio, IGenericRepository<TblDetalleVenta> detalleVentaRepositorio, IMapper mapper)
